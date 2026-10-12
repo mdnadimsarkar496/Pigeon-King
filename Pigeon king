@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pigeon King</title>
+<meta name="theme-color" content="#6558e8">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<style>
+:root{--bg:#f3f5fb;--card:#fff;--text:#172033;--muted:#667085;--brand:#6558e8;--line:#e6e8f0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif}
+header{background:linear-gradient(135deg,#5145cd,#a24be7);color:white;padding:18px 16px 22px;position:sticky;top:0;z-index:4}
+.head{display:flex;justify-content:space-between;align-items:center;gap:10px}.logo{font-weight:850;font-size:21px}.tag{font-size:12px;opacity:.85}
+button,.btn{border:0;border-radius:12px;padding:10px 13px;background:var(--brand);color:white;font-weight:700;cursor:pointer}
+header button{background:#ffffff25;color:white;border:1px solid #ffffff55}
+nav{display:flex;gap:8px;overflow:auto;padding:10px 12px;background:var(--card);position:sticky;top:70px;z-index:3;border-bottom:1px solid var(--line)}
+nav button{white-space:nowrap;background:#eeecff;color:#4338ca;padding:9px 12px}
+main{max-width:760px;margin:auto;padding:14px;display:grid;gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;box-shadow:0 4px 18px #25315b08}
+h2{font-size:18px;margin:0 0 12px}h3{font-size:16px;margin:0 0 6px}.muted{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{padding:12px;border-radius:14px;background:#f6f5ff}.stat strong{display:block;font-size:20px;color:#5145cd}
+input,textarea,select{width:100%;padding:11px;border:1px solid #d9ddeb;border-radius:11px;font:inherit;background:white;color:#172033;margin:5px 0 10px}textarea{min-height:78px;resize:vertical}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row button{flex:1}.secondary{background:#ecebff;color:#4338ca}.danger{background:#fee2e2;color:#991b1b}
+.profile-banner{height:110px;border-radius:14px;background:linear-gradient(120deg,#f59e0b,#e879f9,#6366f1);overflow:hidden;background-size:cover;background-position:center}
+.avatar{width:66px;height:66px;border-radius:50%;object-fit:cover;border:4px solid white;background:#eee;margin-top:-34px}
+.post{border:1px solid var(--line);border-radius:15px;padding:12px;margin-top:10px}.post img,.post video{width:100%;max-height:360px;object-fit:contain;background:#10131c;border-radius:12px;margin-top:8px}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.actions button{font-size:12px;padding:8px 10px}.hidden{display:none!important}
+.game{background:#f8f7ff;border-radius:12px;padding:11px;border:1px solid #e4e1ff}.game button{width:100%;margin-top:8px}
+.chatbox{height:180px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px;background:#fafaff}.bubble{padding:8px 10px;border-radius:12px;background:#ecebff;margin:6px 0;max-width:90%}
+footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
+@media(min-width:620px){.grid.games{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header><div class="head"><div><div class="logo">👑 Pigeon King</div><div class="tag">Social • Games • Creator Studio</div></div><button onclick="toggleTheme()">🌙 থিম</button></div></header>
+<nav>
+<button onclick="show('home')">🏠 হোম</button><button onclick="show('profile')">👤 প্রোফাইল</button><button onclick="show('create')">➕ পোস্ট</button><button onclick="show('games')">🎮 গেমস</button><button onclick="show('earn')">💰 আয়</button><button onclick="show('chat')">🤖 AI চ্যাট</button><button onclick="show('connect')">📞 যোগাযোগ</button>
+</nav>
+<main>
+<section id="home" class="page">
+<div class="card"><h2>স্বাগতম! 👋</h2><p class="muted">ভিডিও দেখুন, পোস্ট দিন, গেমসের তালিকা দেখুন এবং নিজের ক্রিয়েটর প্রোফাইল সাজান।</p><input id="search" placeholder="ভিডিও বা পোস্ট খুঁজুন…" oninput="filterPosts()"></div>
+<div class="card"><h2>📈 আপনার ড্যাশবোর্ড</h2><div class="grid"><div class="stat"><strong id="subs">0</strong>সাবস্ক্রাইবার</div><div class="stat"><strong id="followers">0</strong>ফলোয়ার</div><div class="stat"><strong id="videoCount">0</strong>ভিডিও/পোস্ট</div><div class="stat"><strong id="totalLikes">0</strong>লাইক</div></div></div>
+<div class="card"><h2>📰 পোস্ট ফিড</h2><div id="feed"><p class="muted">এখনও কোনো পোস্ট নেই। “➕ পোস্ট” থেকে প্রথম পোস্ট তৈরি করুন।</p></div></div>
+</section>
+
+<section id="profile" class="page hidden">
+<div class="card"><h2>👤 নিজের প্রোফাইল</h2><div id="bannerPreview" class="profile-banner"></div><div class="row" style="align-items:end"><img id="avatarPreview" class="avatar" alt="প্রোফাইল ছবি" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%23ddd6fe'/%3E%3Ctext x='50%25' y='58%25' font-size='45' text-anchor='middle' fill='%235145cd'%3E👤%3C/text%3E%3C/svg%3E"><div><h3 id="profileName">আপনার নাম</h3><div class="muted">আপনার ক্রিয়েটর চ্যানেল</div></div></div>
+<label>প্রোফাইলের নাম</label><input id="nameInput" placeholder="আপনার নাম"><label>প্রোফাইল ছবির ফাইল</label><input id="avatarFile" type="file" accept="image/*"><label>ব্যানার ছবির ফাইল</label><input id="bannerFile" type="file" accept="image/*"><button onclick="saveProfile()">প্রোফাইল আপডেট</button>
+<div class="grid" style="margin-top:14px"><div class="stat"><strong id="pSubs">0</strong>সাবস্ক্রাইবার</div><div class="stat"><strong id="pFollowing">0</strong>ফলোয়িং</div><div class="stat"><strong id="pFollowers">0</strong>ফলোয়ার</div><div class="stat"><strong id="pVideos">0</strong>ভিডিও/পোস্ট</div></div>
+</div></section>
+
+<section id="create" class="page hidden"><div class="card"><h2>➕ ভিডিও / শর্ট ভিডিও / ছবি পোস্ট</h2><label>পোস্টের ধরন</label><select id="postType"><option>ভিডিও</option><option>শর্ট ভিডিও</option><option>ছবি পোস্ট</option><option>লাইভ ভিডিও (ডেমো)</option></select><label>ক্যাপশন</label><textarea id="caption" placeholder="আপনার পোস্ট সম্পর্কে লিখুন…"></textarea><label>ছবি বা ভিডিও বাছুন</label><input id="mediaFile" type="file" accept="image/*,video/*"><p class="muted">এই ডেমোতে ফাইল আপনার বর্তমান ব্রাউজার সেশনে দেখানো হবে; অনলাইনে প্রকাশিত বা অন্যদের কাছে আপলোড হবে না।</p><button onclick="createPost()">পোস্ট তৈরি করুন</button></div></section>
+
+<section id="games" class="page hidden"><div class="card"><h2>🎮 ৫০+ গেমসের হাব</h2><p class="muted">নিচের ৫৪টি টাইল নমুনা/প্লেসহোল্ডার। এগুলো পূর্ণাঙ্গ গেম নয়; প্রতিটি গেম যোগ করতে আলাদা HTML গেম বা অনুমোদিত গেম লিংক যুক্ত করতে হবে।</p><div id="gamesGrid" class="grid games"></div></div></section>
+
+<section id="earn" class="page hidden"><div class="card"><h2>💰 ক্রিয়েটর আয়</h2><div class="grid"><div class="stat"><strong>৳<span id="earnings">0.00</span></strong>ডেমো ব্যালেন্স</div><div class="stat"><strong>৳0.00</strong>উত্তোলনের অনুরোধ</div></div><p class="muted">এটি শুধু নমুনা হিসাব—ভিডিও আপলোড বা ভিউ থেকে বাস্তব টাকা তৈরি হয় না। প্রকৃত আয়ের জন্য মনিটাইজেশন, বিজ্ঞাপন/পেমেন্ট পার্টনার ও সার্ভার দরকার।</p><h3>উত্তোলনের অনুরোধ (ডেমো)</h3><label>মাধ্যম</label><select id="payMethod"><option>বিকাশ</option><option>নগদ</option><option>উপায়</option><option>রকেট</option><option>ব্যাংক</option></select><label>অ্যাকাউন্ট নম্বর (ডেমো)</label><input id="payAccount" placeholder="নম্বর লিখুন"><label>পরিমাণ (৳)</label><input id="payAmount" type="number" min="1" placeholder="যেমন 500"><button onclick="withdraw()">উত্তোলনের অনুরোধ দেখুন</button><p id="withdrawMsg" class="muted"></p><p class="muted">নিরাপত্তার জন্য এই ডেমোতে কোনো টাকা পাঠানো হয় না এবং আপনার পেমেন্ট তথ্য কোথাও জমা/পাঠানো হয় না।</p></div></section>
+
+<section id="chat" class="page hidden"><div class="card"><h2>🤖 AI চ্যাট</h2><p class="muted">এটি অফলাইন ডেমো চ্যাট; ChatGPT নয়। আসল AI উত্তর পেতে ইন্টারনেট এবং নিরাপদ ব্যাকএন্ডে AI API সংযোগ করতে হবে। API key কখনো HTML-এ রাখবেন না।</p><div id="chatbox" class="chatbox"><div class="bubble">হ্যালো! ডেমো চ্যাটে স্বাগতম।</div></div><input id="chatInput" placeholder="মেসেজ লিখুন…"><button onclick="sendChat()">পাঠান</button></div></section>
+
+<section id="connect" class="page hidden"><div class="card"><h2>📞 যোগাযোগ</h2><p class="muted">নিচের বাটনগুলো আপনার ডিভাইসের অ্যাপ খুলতে চেষ্টা করবে। ভিডিও কলের জন্য অপর পক্ষের লিংক/সার্ভিস দরকার।</p><label>ফোন নম্বর</label><input id="phone" type="tel" placeholder="+8801XXXXXXXXX"><div class="row"><button onclick="callPhone()">📞 কল</button><button class="secondary" onclick="smsPhone()">💬 SMS</button></div><label>ভিডিও কল লিংক (যেমন Meet/Zoom)</label><input id="videoLink" type="url" placeholder="https://…"><button onclick="openVideo()">🎥 ভিডিও কল খুলুন</button><p class="muted">অ্যাপ নিজে থেকে কাউকে কল/মেসেজ করতে পারবে না; আপনার অনুমতি ও উপযুক্ত সার্ভিস প্রয়োজন।</p></div></section>
+</main>
+<footer>Pigeon King • Demo prototype • বাস্তব অর্থ লেনদেন বা অনলাইন আপলোড সক্রিয় নয়</footer>
+<script>
+const $=id=>document.getElementById(id);let posts=[],likes=0,subscribers=0,following=0,followers=0,earnings=0,avatarData="",bannerData="";
+function show(id){document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));$(id).classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
+function toggleTheme(){document.body.classList.toggle('dark');if(document.body.classList.contains('dark')){document.documentElement.style.setProperty('--bg','#111827');document.documentElement.style.setProperty('--card','#1f2937');document.documentElement.style.setProperty('--text','#f9fafb');document.documentElement.style.setProperty('--muted','#c0c8d6');document.documentElement.style.setProperty('--line','#374151')}else{['--bg','--card','--text','--muted','--line'].forEach(x=>document.documentElement.style.removeProperty(x))}}
+function updateStats(){$('subs').textContent=subscribers;$('pSubs').textContent=subscribers;$('followers').textContent=followers;$('pFollowers').textContent=followers;$('pFollowing').textContent=following;$('videoCount').textContent=posts.length;$('pVideos').textContent=posts.length;$('totalLikes').textContent=likes;$('earnings').textContent=earnings.toFixed(2)}
+function createPost(){let caption=$('caption').value.trim(),file=$('mediaFile').files[0],type=$('postType').value;if(!caption&&!file){alert('ক্যাপশন লিখুন অথবা একটি ফাইল বাছুন।');return}let p={id:Date.now(),type,caption,fileUrl:file?URL.createObjectURL(file):'',fileType:file?file.type:'',likes:0,views:0,comments:0,downloads:0,subbed:false};posts.unshift(p);$('caption').value='';$('mediaFile').value='';renderPosts();updateStats();show('home')}
+function renderPosts(){let feed=$('feed');feed.innerHTML='';if(!posts.length){feed.innerHTML='<p class="muted">এখনও কোনো পোস্ট নেই। “➕ পোস্ট” থেকে প্রথম পোস্ট তৈরি করুন।</p>';return}posts.forEach(p=>{let d=document.createElement('article');d.className='post';let title=document.createElement('h3');title.textContent=p.type;d.append(title);if(p.caption){let para=document.createElement('p');para.textContent=p.caption;d.append(para)}if(p.fileUrl){let media;if(p.fileType.startsWith('video/')){media=document.createElement('video');media.controls=true;media.src=p.fileUrl}else{media=document.createElement('img');media.src=p.fileUrl;media.alt='পোস্ট মিডিয়া'}d.append(media)}let stats=document.createElement('p');stats.className='muted';stats.textContent=`👁 ${p.views} ভিউ • ❤️ ${p.likes} লাইক • 💬 ${p.comments} কমেন্ট • ⬇ ${p.downloads} ডাউনলোড`;d.append(stats);let actions=document.createElement('div');actions.className='actions';[['❤️ লাইক',()=>{p.likes++;likes++;p.views++;renderPosts();updateStats()}],['👁 ভিউ +1',()=>{p.views++;renderPosts()}],['💬 কমেন্ট',()=>{let c=prompt('কমেন্ট লিখুন');if(c){p.comments++;renderPosts()}}],['↗ শেয়ার',()=>{if(navigator.share)navigator.share({title:'Pigeon King পোস্ট',text:p.caption||p.type}).catch(()=>{});else alert('আপনার ব্রাউজারে শেয়ার অপশন পাওয়া যায়নি।')}],['⬇ ডাউনলোড',()=>{if(!p.fileUrl){alert('এই পোস্টে ডাউনলোডযোগ্য ফাইল নেই।');return}let a=document.createElement('a');a.href=p.fileUrl;a.download='pigeon-king-media';a.click();p.downloads++;renderPosts()}],['Subscribe',()=>{if(!p.subbed){p.subbed=true;subscribers++;followers++;}else{p.subbed=false;subscribers=Math.max(0,subscribers-1);followers=Math.max(0,followers-1)}renderPosts();updateStats()}]].forEach(([label,fn])=>{let b=document.createElement('button');b.textContent=label;b.className='secondary';b.onclick=fn;actions.append(b)});d.append(actions);feed.append(d)})}
+function filterPosts(){let q=$('search').value.toLowerCase();[...$('feed').children].forEach(el=>el.classList.toggle('hidden',!el.textContent.toLowerCase().includes(q)))}
+function readImage(input,cb){let f=input.files[0];if(!f)return;if(!f.type.startsWith('image/')){alert('একটি ছবি বাছুন।');return}let r=new FileReader();r.onload=()=>cb(r.result);r.readAsDataURL(f)}
+function saveProfile(){let n=$('nameInput').value.trim();if(n)$('profileName').textContent=n;readImage($('avatarFile'),v=>{$('avatarPreview').src=v;avatarData=v});readImage($('bannerFile'),v=>{$('bannerPreview').style.backgroundImage=`url("${v}")`;bannerData=v});alert('প্রোফাইল প্রিভিউ আপডেট করা হয়েছে। স্থায়ী/অনলাইন সেভের জন্য ডেটাবেস দরকার।')}
+function withdraw(){let m=$('payMethod').value,a=$('payAccount').value.trim(),v=Number($('payAmount').value);if(!a||!Number.isFinite(v)||v<=0){$('withdrawMsg').textContent='একটি নমুনা অ্যাকাউন্ট নম্বর ও সঠিক পরিমাণ লিখুন।';return}$('withdrawMsg').textContent=`ডেমো: ${m}-এ ৳${v.toFixed(2)} উত্তোলনের অনুরোধ তৈরি হতো। কোনো টাকা পাঠানো হয়নি।`}
+function sendChat(){let val=$('chatInput').value.trim();if(!val)return;let b=document.createElement('div');b.className='bubble';b.textContent='আপনি: '+val;$('chatbox').append(b);let r=document.createElement('div');r.className='bubble';r.textContent='ডেমো উত্তর: আমি অফলাইন নমুনা চ্যাট। ChatGPT-এর আসল উত্তর পেতে সার্ভার/API সংযোগ করুন।';$('chatbox').append(r);$('chatInput').value='';$('chatbox').scrollTop=$('chatbox').scrollHeight}
+function callPhone(){let n=$('phone').value.trim();if(!n){alert('ফোন নম্বর লিখুন।');return}location.href='tel:'+n}
+function smsPhone(){let n=$('phone').value.trim();if(!n){alert('ফোন নম্বর লিখুন।');return}location.href='sms:'+n}
+function openVideo(){let u=$('videoLink').value.trim();if(!/^https?:\/\//i.test(u)){alert('একটি বৈধ HTTPS/HTTP ভিডিও কল লিংক দিন।');return}window.open(u,'_blank','noopener')}
+const games=['রানার','পাজল','মেমোরি কার্ড','টিক-ট্যাক-টো','স্নেক','ব্রিক ব্রেকার','ম্যাচ-৩','সুডোকু','চেস','চেকার্স','ক্যারম','লুডু','কুইজ','শব্দ খেলা','গণিত চ্যালেঞ্জ','মেজ রানার','বল জাম্প','স্পেস শুটার','পং','ফ্ল্যাপি বার্ড','টাওয়ার স্ট্যাক','কালার ম্যাচ','বাবল শুটার','মাইন সুইপার','হ্যাংম্যান','টাইপিং টেস্ট','কার রেসিং','বাইক রেসিং','ফুটবল পেনাল্টি','বাস্কেটবল শট','আর্চারি','ফিশিং','ফ্রুট স্লাইস','ব্লক পাজল','2048','টেট্রিস স্টাইল','ডট কানেক্ট','পাথ ফাইন্ডার','পেয়ার ম্যাচ','ট্রিভিয়া','জিওগ্রাফি কুইজ','বিজ্ঞান কুইজ','রিদম ট্যাপ','রিফ্লেক্স টেস্ট','ব্যালেন্স বল','বক্স পুশ','লাইট আউট','নাম্বার স্লাইড','মেজ পাজল','কার্ড সলিটেয়ার','ওয়ার্ড সার্চ','বাউন্স বল','জাম্প স্কয়ার','ক্যাচ দ্য স্টার'];games.forEach((g,i)=>{let d=document.createElement('div');d.className='game';d.innerHTML=`<strong>${i+1}. ${g}</strong><div class="muted">গেম প্লেসহোল্ডার</div><button class="secondary" onclick="alert('${g}: এই গেমটি এখনো যোগ করা হয়নি।')">খেলুন</button>`;$('gamesGrid').append(d)});
+updateStats();
+</script>
+<script>if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(err => console.log('Offline support unavailable:', err))); }</script>
+</body></html>
